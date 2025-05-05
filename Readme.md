@@ -34,6 +34,19 @@ kubectl config use-context <nameofcontext>
 kubectl config get-contexts # View the current user
 ```
 
+```sh
+kubectl create role read-only --verb=list,get,watch \
+--resource=pods,deployments,services
+```
+
+```sh
+kubectl create rolebinding read-only-binding --role=read-only --user=<username>
+```
+```sh
+kubectl auth can-i --list --as <user>
+```
+
+
 ---
 
 # Kubeadm
@@ -54,6 +67,20 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
 ```sh
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+```sh
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+```
+
+```sh
+sudo nano /var/lib/kubelet/kubeadm-flags.env
+```
+Add --node-ip=<node-ip> 
+KUBELET_KUBEADM_ARGS="--node-ip=192.168.56.10 --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock --pod-infra-container-image=registry.k8s.io/pause:3.10"
+
+```sh
+sudo systemctl restart kubelet
 ```
 
 ```sh
